@@ -1,0 +1,20 @@
+***GLOBAL VARIABLES***
+SEED: 39205012
+INIT_TIME: 0
+FIN_TIME: 1000
+ARRIVE_MIN: 1
+ARRIVE_MAX: 10
+QUIT_PROB: 2.2
+CPU_MIN: 10
+CPU_MAX: 11
+DISK1_MIN: 20
+DISK1_MAX: 11
+DISK2_MIN: 30
+DISK2_MAX: 11
+**********************
+
+The arrival of a new job to the system
+A job entering the CPU, Disk 1, or Disk 2
+A job leaving the CPU, Disk 1, or Disk 2
+A job exiting the system
+The “simulation finished” event at FIN_TIME
