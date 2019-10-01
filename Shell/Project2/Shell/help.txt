@@ -1,0 +1,31 @@
+************************************************************************************
+* 			      |  Stephen's Shell |                                 *
+*			       ------------------                                  *   
+*                                                                                  *
+* Built-In Functions:                                                              *   
+* ------------------                                                               *
+*                                                                                  *
+* -cd path:                Changes the current working directory to given path.    *
+*                                                                                  *
+* -clr:		           Clear the screen.                                       *
+*                                                                                  *                                            
+* -dir:                    Print contents of current directory.                    *   
+* -dir path:               Print directory contents of given path.                 *
+*                                                                                  *
+* -echo input:             Prints the input given.                                 *
+*                                                                                  *
+* -environ:                Prints environment variables.                           *
+*                                                                                  *
+* -pause:                  Wait for user to press enter.                           *
+*                                                                                  *
+*                                                                                  *
+*                                                                                  *
+*                                                                                  *
+*                                                                                  *
+*                                                                                  *
+*                                                                                  *
+*                                                                                  *
+*                                                                                  *
+*                                                                                  *
+*                                                                                  *
+************************************************************************************
