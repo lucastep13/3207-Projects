@@ -1,1 +1,3 @@
-testtestERROR EXECUTING COMMAND!
+argv: wc
+
+      35     157    3022 help.txt

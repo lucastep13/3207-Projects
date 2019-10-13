@@ -1,0 +1,75 @@
+argv: cat
+
+************************************************************************************
+* 			      |  Stephen's Shell |                                 *
+*			       ------------------                                  *   
+*                                                                                  *
+* Built-In Commands:                                                               *   
+* ------------------                                                               *
+*                                                                                  *
+* -cd path:                Changes the current working directory to given path.    *
+*                                                                                  *
+* -clr:		           Clear the screen.                                       *
+*                                                                                  *
+* -dir:                    Print contents of current directory.                    *   
+* -dir path:               Print directory contents of given path.                 *
+*                                                                                  *
+* -echo input:             Prints the input given.                                 *
+*                                                                                  *
+* -environ:                Prints environment variables.                           *
+*                                                                                  *
+* -help:                   Prints user manual to screen.                           *
+*                                                                                  *
+* -pause:                  Wait for user to press enter.                           *
+*                                                                                  *
+* -quit:                   Exits the shell.                                        *
+*                                                                                  *
+*                                                                                  *
+*                                                                                  *
+* External Commands:                                                               *
+* ------------------                                                               *
+*                                                                                  *
+* Entering a command not listed above will attempt to launch a program with the    *
+* given name.                                                                      *
+*                                                                                  *
+* ./myProgramName: Launches the given program.                                     *
+*                                                                                  *
+*                                                                                  *
+************************************************************************************argv: cat
+
+************************************************************************************
+* 			      |  Stephen's Shell |                                 *
+*			       ------------------                                  *   
+*                                                                                  *
+* Built-In Commands:                                                               *   
+* ------------------                                                               *
+*                                                                                  *
+* -cd path:                Changes the current working directory to given path.    *
+*                                                                                  *
+* -clr:		           Clear the screen.                                       *
+*                                                                                  *
+* -dir:                    Print contents of current directory.                    *   
+* -dir path:               Print directory contents of given path.                 *
+*                                                                                  *
+* -echo input:             Prints the input given.                                 *
+*                                                                                  *
+* -environ:                Prints environment variables.                           *
+*                                                                                  *
+* -help:                   Prints user manual to screen.                           *
+*                                                                                  *
+* -pause:                  Wait for user to press enter.                           *
+*                                                                                  *
+* -quit:                   Exits the shell.                                        *
+*                                                                                  *
+*                                                                                  *
+*                                                                                  *
+* External Commands:                                                               *
+* ------------------                                                               *
+*                                                                                  *
+* Entering a command not listed above will attempt to launch a program with the    *
+* given name.                                                                      *
+*                                                                                  *
+* ./myProgramName: Launches the given program.                                     *
+*                                                                                  *
+*                                                                                  *
+************************************************************************************
