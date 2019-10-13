@@ -8,7 +8,7 @@
 * -cd path:                Changes the current working directory to given path.    *
 *                                                                                  *
 * -clr:		           Clear the screen.                                       *
-*                                                                                  *                                   
+*                                                                                  *
 * -dir:                    Print contents of current directory.                    *   
 * -dir path:               Print directory contents of given path.                 *
 *                                                                                  *

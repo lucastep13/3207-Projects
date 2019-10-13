@@ -271,6 +271,7 @@ void environ(){
 
 void launch(char *Command){
   
+    cout<<"\nLAUNCHING FOREGROUND: \n";
     char *argv[512];
     char *str = Command;
     int init_size = strlen(str);
@@ -305,7 +306,7 @@ void launch(char *Command){
     cout<<"\n\n\n";
 
     
-    int pid = fork();cout<<"test";
+    int pid = fork();
     if(pid >= 0){
         cout<<"\n\nargv: ";
             cout<<argv[0];
@@ -344,6 +345,7 @@ void launch(char *Command){
 
 void launchBackground(char *Command){
   
+    cout<<"\nLAUNCHING BACKGROUND: \n";
     char *argv[512];
     char *str = Command;
     int init_size = strlen(str);
@@ -402,6 +404,8 @@ void launchBackground(char *Command){
             else{
                 
             }
+            
+            
         }
     }
         
@@ -412,6 +416,23 @@ void launchBackground(char *Command){
     ::isLaunch = 0;
 }
 
+int LaunchType(char *Command){
+    
+    int launchType =0;
+    
+    for(int i=0; i<strlen(Command); i++){
+        cout<<Command[i];
+        if(Command[i] == '&'){
+            
+            return 1;           //Launch in background
+        }
+        
+    }
+    launchType = 2; 
+    return launchType;
+    
+    
+}
 
 /*
  * 
@@ -420,7 +441,9 @@ int main(int argc, char** argv) {
 
     string Input;
     char cstr[Input.size()+1];
+    char myCopy[Input.size()+1];
     
+ 
     
     stringvec v;
     //dir("/Users/stephenlucas", v);
@@ -559,12 +582,33 @@ int main(int argc, char** argv) {
             cout<<"Attempting to load: "<< Input <<endl;
             ::isLaunch = 1;
             
-            strcpy(cstr, Input.c_str());
+           cout<< "\nTest: " << Input.substr(Input.length()-1,Input.length()-1)<<endl;
+                
+           if(Input.substr(Input.length()-1,Input.length()-1) == "&"){
+               Input = Input.substr(0, Input.length()-1);
+               strcpy(cstr, Input.c_str());
+               strcpy(myCopy, Input.c_str());    
+               launchBackground(myCopy);
+           }
+           else{
+               strcpy(cstr, Input.c_str());          //Copy char array because initial will be tokenized
+                strcpy(myCopy, Input.c_str());        
+               if(LaunchType(myCopy) == 2){
+                    launch(cstr);
+               }
+           }
+           
+                     
             
             
-            //launchBackground(cstr);
-            launch(cstr);
+    
             
+            
+            
+           
+            
+            
+            //MAKE INT REPRESENTING ALL EXTERNAL COMMAND CASES, MAKE FUNCTION THAT DETERMINES EXTERNAL COMAND TYPE
             
             
         }
