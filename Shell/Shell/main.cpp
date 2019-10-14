@@ -66,21 +66,53 @@ int cd(string DirName){
 }
 
 //Function to print help.txt file
-void help(){
+void help(int launchType, string fileName){
     string line;
     string savePath=GetCurrentWorkingDir();
     
     cd(::ShellPath);
     
+    fstream file; 
     ifstream myFile ("help.txt");
     
+    //Set redirection to append and create file if it doesnt exist
+    if(launchType == 2){
+        file.open(fileName, ios::out | std::fstream::app |fstream::out); 
+    }
+    //Set redirection to append and create file if it doesnt exist
+    if(launchType == 1){
+        file.open(fileName, ios::out |fstream::out); 
+    }
     
+    
+    // Backup streambuffers of  cout 
+    streambuf* stream_buffer_cout = cout.rdbuf(); 
+    streambuf* stream_buffer_cin = cin.rdbuf(); 
+    
+    // Get the streambuffer of the file 
+    streambuf* stream_buffer_file = file.rdbuf(); 
+    
+    if(launchType != 0){
+    // Redirect cout to file 
+    cout.rdbuf(stream_buffer_file); }
+    
+    cout << "This line written to file yes it is yea" << endl; 
     if (myFile.is_open())
-        std::cout << myFile.rdbuf();
-    
+        cout << myFile.rdbuf();
+    else
+        cout<<"aint open chief";
     
     myFile.close();
     cout<<endl;
+    
+    // Redirect cout back to screen 
+    cout.rdbuf(stream_buffer_cout); 
+    cout << "This line is written to screen" << endl;
+    
+    myFile.close();
+   
+    
+    
     
     cd(savePath);
 }
@@ -103,8 +135,38 @@ void dir(const std::string& name, stringvec& v)
 
 
 //Function to print user input
-void echo(string myInput){
+void echo(string myInput, int launchType, string userFile){
+ 
+    string fileName = userFile;
+    fstream file;
+    //Set redirection to append and create file if it doesnt exist
+    if(launchType == 2){
+        file.open(fileName, ios::out | std::fstream::app |fstream::out); 
+    }
+    //Set redirection to truncate and create file if it doesnt exist
+    if(launchType == 1){
+        file.open(fileName, ios::out |fstream::out); 
+    }
+    
+    
+    // Backup streambuffers of  cout 
+    streambuf* stream_buffer_cout = cout.rdbuf(); 
+    streambuf* stream_buffer_cin = cin.rdbuf(); 
+    
+    // Get the streambuffer of the file 
+    streambuf* stream_buffer_file = file.rdbuf(); 
+    
+    if(launchType != 0){
+    // Redirect cout to file 
+    cout.rdbuf(stream_buffer_file); }
+    
 	cout<<myInput<<endl;
+    
+    // Redirect cout back to screen 
+    cout.rdbuf(stream_buffer_cout); 
+   
+    
+        file.close();
 }
 
 //Pauses shell until user presses enter
@@ -581,6 +643,7 @@ void Append(char *Command, char *outFile){
     
     ::isLaunch = 0;
 }
+
 int LaunchType(char *Command){
     
     int launchType =0;
@@ -597,6 +660,9 @@ int LaunchType(char *Command){
             }
             else
                 return 3;           //Truncate!
+        }
+        else if(Command[i] == '<'){
+            return 5;               //Input redirect!
         }
         
     }
@@ -618,7 +684,7 @@ int main(int argc, char** argv) {
     char cstr[Input.size()+1];
     char myCopy[Input.size()+1];
     
-    
+    int launchFunction =0;
  
     
     stringvec v;
@@ -727,17 +793,95 @@ int main(int argc, char** argv) {
                 }
                 //Handles the input after the echo command
                 else{
+                    cout<<Input.length();
+                    for(int i = 0; i< Input.length(); i++){
+                      
+                        if(Input.substr(i,1) == ">"){
+                            
+                            if(Input.substr(i,2) == ">>"){
+                                
+                                textFile = Input.substr(i+3, Input.length()-1);
+                                Input = Input.substr(5, (Input.length()-5)-textFile.length()-4);
 
-                    //Call echo command
-                    if(Input.substr(4,1) == " "){
+                                strcpy(cstr, Input.c_str()); 
+                                strcpy(cFile, textFile.c_str()); 
 
-                        echo(Input.substr(5, Input.length()-1));
+                                cout<<endl<<"Parsed Command: "<<Input;
+                                cout<<endl<<"Parsed Text File: "<<textFile<<endl;
+                                echo(Input, 2, textFile);
+
+                                break;
+                            }
+                            else{
+                                textFile = Input.substr(i+2, Input.length()-1);
+                                Input = Input.substr(5, (Input.length()-5)-textFile.length()-3);
+
+                                strcpy(cstr, Input.c_str()); 
+                                strcpy(cFile, textFile.c_str()); 
+
+                                cout<<endl<<"Parsed Command: "<<Input;
+                                cout<<endl<<"Parsed Text File: "<<textFile<<endl;
+                                echo(Input, 1, textFile);
+                            }
+                        }
                     }
+                    
+                    
+                    //Call echo command  
+                    //echo(Input.substr(5, Input.length()-1), 0, "");
+                    
+                   
                 }
             }
 
-            if(Input == "help"){
-                help();
+            if(Input.substr(0,4) == "help"){
+                
+                for(int i =0; i<Input.length(); i++){
+                    cout<<Input.substr(i,1);
+                    if(Input.substr(i,1) == ">"){
+                        //Append
+                        if(Input.substr(i,2) == ">>"){
+                            cout<<"\nGOTCHTA at: "<<i;
+                            textFile = Input.substr(i+3, Input.length());
+                            Input = Input.substr(0,i-1);
+
+                            strcpy(cstr, Input.c_str()); 
+                            strcpy(cFile, textFile.c_str()); 
+
+                            cout<<endl<<"Parsed Command: "<<Input;
+                            cout<<endl<<"Parsed Text File: "<<textFile<<endl;
+
+                            help(2, textFile);
+                            break;
+                        }
+                        //Truncate
+                        else{
+                            textFile = Input.substr(i+2, Input.length());
+                            Input = Input.substr(0,i-1);
+
+                            strcpy(cstr, Input.c_str()); 
+                            strcpy(cFile, textFile.c_str()); 
+
+                            cout<<endl<<"Parsed Command: "<<Input;
+                            cout<<endl<<"Parsed Text File: "<<textFile<<endl;
+
+                            help(1, textFile);
+                            break;
+                            
+                        }
+                    }
+                    else{
+                        if(Input.length() == 4){
+                            help(0, "test2.txt");
+                            break;
+                        }
+                    }
+                    
+                    
+                    
+                }
+               
+                    
             }
 
             if(Input == "pause"){
@@ -808,6 +952,24 @@ int main(int argc, char** argv) {
                         }
                     }
                     Append(cstr, cFile);
+               }
+                else if(LaunchType(myCopy) == 5){
+                    cout<<"Input redirection!";
+                    for(int i =0; i<Input.length(); i++){
+                        cout<<Input.substr(i,1);
+                        if(Input.substr(i,1) == "<"){
+                            int indexFound = i;
+                            textFile = Input.substr(i+3, Input.length());
+                            Input = Input.erase(i,i-1);
+                            
+                            strcpy(cstr, Input.c_str()); 
+                            strcpy(cFile, textFile.c_str()); 
+                            
+                            cout<<endl<<"Parsed Command: "<<Input;
+                            cout<<endl<<"Parsed Text File: "<<textFile;
+                        }
+                    }
+                    launch(cstr);
                }
            }
            
