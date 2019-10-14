@@ -66,21 +66,53 @@ int cd(string DirName){
 }
 
 //Function to print help.txt file
-void help(){
+void help(int launchType, string fileName){
     string line;
     string savePath=GetCurrentWorkingDir();
     
     cd(::ShellPath);
     
+    fstream file; 
     ifstream myFile ("help.txt");
     
+    //Set redirection to append and create file if it doesnt exist
+    if(launchType == 2){
+        file.open(fileName, ios::out | std::fstream::app |fstream::out); 
+    }
+    //Set redirection to append and create file if it doesnt exist
+    if(launchType == 1){
+        file.open(fileName, ios::out |fstream::out); 
+    }
     
+    
+    // Backup streambuffers of  cout 
+    streambuf* stream_buffer_cout = cout.rdbuf(); 
+    streambuf* stream_buffer_cin = cin.rdbuf(); 
+    
+    // Get the streambuffer of the file 
+    streambuf* stream_buffer_file = file.rdbuf(); 
+    
+    if(launchType != 0){
+    // Redirect cout to file 
+    cout.rdbuf(stream_buffer_file); }
+    
+    cout << "This line written to file yes it is yea" << endl; 
     if (myFile.is_open())
-        std::cout << myFile.rdbuf();
-    
+        cout << myFile.rdbuf();
+    else
+        cout<<"aint open chief";
     
     myFile.close();
     cout<<endl;
+    
+    // Redirect cout back to screen 
+    cout.rdbuf(stream_buffer_cout); 
+    cout << "This line is written to screen" << endl;
+    
+    myFile.close();
+   
+    
+    
     
     cd(savePath);
 }
@@ -498,6 +530,90 @@ void Truncate(char *Command, char *outFile){
     
     ::isLaunch = 0;
 }
+
+void Append(char *Command, char *outFile){
+  
+    cout<<"\nAppending!: \n";
+    char *argv[512];
+    char *str = Command;
+    char *strCopy = Command;
+    
+    int init_size = strlen(str);
+    char delim[] = " ";
+    char *textFile =outFile;
+    int fileIndex;
+    
+    int index =0;
+    
+    char *ptr = strtok(str, delim);
+    argv[0] = ptr;
+    index++;
+    
+    while(ptr != NULL)
+    {   
+        cout<<endl<<ptr<<endl;
+            printf("'%s'\n", ptr);
+            ptr = strtok(NULL, delim);
+            
+            if(ptr == NULL){
+                break;
+            }
+            
+            argv[index] = ptr;
+            
+            index++;
+            
+            
+    }
+    argv[index] = NULL;
+    
+   
+    cout<<"\nCommand Size: "<<strlen(Command);
+    
+    //char *argv[3] = {"wc", "help.txt"};
+    //argv[2] = NULL; 
+    
+    
+    cout<<"\n\n\n";
+
+    
+    int pid = fork();
+    if(pid >= 0){
+        cout<<"\n\nargv: ";
+            cout<<argv[0];
+        if(pid == 0){
+            int outFile = open(textFile, O_WRONLY|O_CREAT|O_APPEND, S_IRWXU| S_IRWXU
+                               |S_IRWXG|S_IRWXO);
+
+            close(1);
+            dup2(outFile, 1);
+            close(outFile);
+
+            //if(execvp(cmdString, argv) < 0){
+           //     puts("ERROR EXECUTING COMMAND!");
+           // }
+            
+            cout<<"\n\nargv: ";
+            cout<<argv[0];
+            if(execvp(argv[0], argv) < 0){
+                puts("ERROR EXECUTING COMMAND!");
+            }
+            
+        }
+        else
+        {
+                int status = 0;
+                wait(&status);
+        }
+    }
+        
+    else{
+        puts("Forking error!");
+    }
+    
+    ::isLaunch = 0;
+}
+
 int LaunchType(char *Command){
     
     int launchType =0;
@@ -509,8 +625,11 @@ int LaunchType(char *Command){
             return 1;           //Launch in background
         }
         else if(Command[i] == '>'){
-            
-            return 3;           //Truncate!
+            if(Command[i+1] == '>'){
+                return 4;       //APPEND!
+            }
+            else
+                return 3;           //Truncate!
         }
         
     }
@@ -532,7 +651,7 @@ int main(int argc, char** argv) {
     char cstr[Input.size()+1];
     char myCopy[Input.size()+1];
     
-    
+    int launchFunction =0;
  
     
     stringvec v;
@@ -650,8 +769,54 @@ int main(int argc, char** argv) {
                 }
             }
 
-            if(Input == "help"){
-                help();
+            if(Input.substr(0,4) == "help"){
+                
+                for(int i =0; i<Input.length(); i++){
+                    cout<<Input.substr(i,1);
+                    if(Input.substr(i,1) == ">"){
+                        //Append
+                        if(Input.substr(i,2) == ">>"){
+                            cout<<"\nGOTCHTA at: "<<i;
+                            textFile = Input.substr(i+3, Input.length());
+                            Input = Input.substr(0,i-1);
+
+                            strcpy(cstr, Input.c_str()); 
+                            strcpy(cFile, textFile.c_str()); 
+
+                            cout<<endl<<"Parsed Command: "<<Input;
+                            cout<<endl<<"Parsed Text File: "<<textFile<<endl;
+
+                            help(2, textFile);
+                            break;
+                        }
+                        //Truncate
+                        else{
+                            textFile = Input.substr(i+2, Input.length());
+                            Input = Input.substr(0,i-1);
+
+                            strcpy(cstr, Input.c_str()); 
+                            strcpy(cFile, textFile.c_str()); 
+
+                            cout<<endl<<"Parsed Command: "<<Input;
+                            cout<<endl<<"Parsed Text File: "<<textFile<<endl;
+
+                            help(1, textFile);
+                            break;
+                            
+                        }
+                    }
+                    else{
+                        if(Input.length() == 4){
+                            help(0, "test2.txt");
+                            break;
+                        }
+                    }
+                    
+                    
+                    
+                }
+               
+                    
             }
 
             if(Input == "pause"){
@@ -688,7 +853,7 @@ int main(int argc, char** argv) {
                     
                }
                 else if(LaunchType(myCopy) == 3){
-                    cout<<"OH WE TRUNCATING!";
+                    cout<<"TRUNCATING!";
                     for(int i =0; i<Input.length(); i++){
                         cout<<Input.substr(i,1);
                         if(Input.substr(i,1) == ">"){
@@ -704,6 +869,24 @@ int main(int argc, char** argv) {
                         }
                     }
                     Truncate(cstr, cFile);
+               }
+                else if(LaunchType(myCopy) == 4){
+                    cout<<"APPENDING!";
+                    for(int i =0; i<Input.length(); i++){
+                        cout<<Input.substr(i,1);
+                        if(Input.substr(i,2) == ">>"){
+                            cout<<"\nGOTCHTA at: "<<i;
+                            textFile = Input.substr(i+3, Input.length());
+                            Input = Input.substr(0,i-1);
+                            
+                            strcpy(cstr, Input.c_str()); 
+                            strcpy(cFile, textFile.c_str()); 
+                            
+                            cout<<endl<<"Parsed Command: "<<Input;
+                            cout<<endl<<"Parsed Text File: "<<textFile;
+                        }
+                    }
+                    Append(cstr, cFile);
                }
            }
            
