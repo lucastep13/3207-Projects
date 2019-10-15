@@ -24,6 +24,8 @@
                    projectFiles="false"
                    kind="IMPORTANT_FILES_FOLDER">
       <itemPath>Makefile</itemPath>
+      <itemPath>help.txt</itemPath>
+      <itemPath>output.txt</itemPath>
     </logicalFolder>
   </logicalFolder>
   <projectmakefile>Makefile</projectmakefile>
@@ -35,6 +37,9 @@
         <rebuildPropChanged>false</rebuildPropChanged>
       </toolsSet>
       <compileType>
+        <ccTool>
+          <standard>11</standard>
+        </ccTool>
       </compileType>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
