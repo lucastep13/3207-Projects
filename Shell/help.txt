@@ -30,7 +30,19 @@
 * Entering a command not listed above will attempt to launch a program with the    *
 * given name.                                                                      *
 *                                                                                  *
-* ./myProgramName: Launches the given program.                                     *
+* Example: -ls                                                                     *
 *                                                                                  *
+* Entering a command with & at the end will launch command in background of shell. *
+*                                                                                  *
+* Example: -ls&                                                                    *
+*                                                                                  *
+* Entering a command with > or >> will truncate or append to file respectively.    *
+*                                                                                  *
+* Example: -ls > trunc.txt                                                         *
+*          -ls >> append.txt                                                       *
+*                                                                                  *
+* Entering a command with < will redirect the output to given file.                *
+*                                                                                  *
+* Example: -ls < redirect.txt                                                      *
 *                                                                                  *
 ************************************************************************************
